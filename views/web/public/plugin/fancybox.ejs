@@ -1,0 +1,10 @@
+<%# 弹出框_%>
+<link href="https://cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.js"></script>
+<script>
+  $().fancybox({
+    selector : '[data-fancybox="images"]',
+    'protect': true, 'loop': false,
+    'buttons' : [ 'zoom', 'thumbs', 'close' ]
+  });
+</script>

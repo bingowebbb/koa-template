@@ -1,0 +1,16 @@
+<%_ if(typeof user.name != 'undefined') { _%>
+<ul class="navbar-nav float-right mr-2">
+  <li class="nav-item">
+    <a class="nav-link pr-0" href="javascript:;" style=>欢迎您：</a>
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle pl-1" href="javascript:;" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <%= user.name _%>
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a class="dropdown-item" href="/method/post/logout.do">登出</a>
+      <!--    <div class="dropdown-divider"></div> -->
+    </div>
+  </li>
+</ul>
+<%_ } _%>

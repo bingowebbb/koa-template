@@ -1,0 +1,6 @@
+<%_ let _plugin = typeof plugin != 'undefined' ? Array.isArray(plugin) ? plugin : [plugin] : [] _%>
+<%_ Array.from(new Set(_plugin)).forEach(function(v){ _%>
+<%_ let _pname = Array.isArray(v) ? v[0] : v _%>
+<%_ let _args  = Array.isArray(v) ? v[1] : {} _%>
+<%-  include(_pname, _args) _%>
+<% }) _%>

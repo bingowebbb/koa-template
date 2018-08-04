@@ -1,0 +1,9 @@
+<%- include(
+  '../public/header', {
+    lf_nav: typeof lf_nav == 'undefined' ? '' : lf_nav,
+    plugin: ['shuffle', 'lodash', 'fancybox','waypoint', 'lazyload','x-editable', 'colr', 'select2', 'pagination', 'axios']
+  }
+) _%>
+<script>config=<%- JSON.stringify(setting) _%></script>
+<script src="/build/js/appCard.js?v<%- version _%>"></script>
+<script src="/build/js/appCardList.js?v<%- version _%>"></script>

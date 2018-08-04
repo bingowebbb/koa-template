@@ -1,0 +1,37 @@
+<%# 美图秀秀的图片编辑及上传 _%>
+<script src="http://open.web.meitu.com/sources/xiuxiu.js" type="text/javascript"></script>
+<script>
+  var xiuxiu_init = function(containerid, opts, id){
+    let sf = [];
+    opts['vars'] = [
+    { name: 'localFileEnabled', value: 1},
+    { naem: 'subBrowseBtnVisible', value: 1},  
+    { name: 'nav', value: 'edit' },
+    { name: 'quality', value: 100 },
+    { name: 'uploadBtnLabel', value: '上传'},
+    { name: 'titleVisible', value: 0},
+    { name: 'customMenu', value: [
+      {'decorate': ['basicEdit', 'effect', 'localFixes']}, 'puzzle' ]
+    }].concat( opts.vars || []);
+    _.forEach(_.get(opts, 'vars'), function(v){
+      xiuxiu.setLaunchVars(v.name, v.value, id);
+    });
+    xiuxiu.setLaunchVars('subBrowseBtnVisible', 1);
+    _.forEach(_.keys(opts), function(key){
+      if(_.isFunction(opts[key])){ xiuxiu[key] = opts[key]; }
+    });
+    _.forEach(_.keys(xiuxiu), function(key){
+      if(_.isFunction(xiuxiu[key])){
+        sf[key] = function(){
+          let sf_vars = _.values(arguments);
+          xiuxiu[key].apply(xiuxiu, sf_vars.concat(id));
+        }
+      }
+    });
+    _.get(opts, 'url') && xiuxiu.setUploadURL(window.location.href.replace(window.location.pathname, '')+_.get(opts, 'url'), id);
+    xiuxiu.setUploadType(_.isEmpty(_.get(opts, 'up_type')) ? 2 : opts['up_type'], id);
+    _.get(opts, 'up_name') && xiuxiu.setUploadDataFieldName(opts['up_name'], id);
+    xiuxiu.embedSWF(containerid ,1 , opts.width || '100%', opts.height || '100%' , id);
+    return sf;
+  };
+</script>

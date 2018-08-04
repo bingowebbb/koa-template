@@ -1,0 +1,40 @@
+<%# 提供模型等的属性编辑功能 _%>
+<link href="https://cdn.bootcss.com/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
+<link href="/css/popover.css" rel="stylesheet">
+<script src="/lib/bootstrap3/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script>
+  $.fn.editableform.buttons = [
+  '<button type="submit" class="btn btn-sm editable-submit p-1">',
+  '<span class="oi oi-check  btn btn-sm btn-primary"></span>',
+  '</button>',
+  '<button type="button" class="btn btn-sm editable-cancel ml-0 p-1">',
+  '<span class="oi oi-x btn btn-sm btn-light"></span>',
+  '</button>'
+  ].join('');
+
+$.fn.editableform.template = '<form class="form editableform">'+
+  '<div class="control-group">' + 
+  '<div><div class="editable-input ugc-editable-input" ></div><div class="editable-buttons"></div></div>'+
+  '<div class="editable-error-block"></div>' + 
+  '</div>' + 
+  '</form>';
+ $.fn.editabletypes.textarea.defaults = $.extend($.fn.editabletypes.textarea.defaults, {
+   rows: 3,
+   inputclass: 'input-large'
+ });
+$.fn.editableContainer.defaults = $.extend($.fn.editableContainer.defaults, {
+  'placement': function($el){
+    let type = _.get(this, 'options.editable.options.type');
+    switch(type){
+      case 'text':
+      case 'textarea':
+        return 'auto top';
+      case 'checklist':
+        return 'auto top';
+      case 'select':
+        return 'auto top';
+    };
+  }
+});
+</script>

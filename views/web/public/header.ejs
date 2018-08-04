@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <link rel="dns-prefetch" href="//cdn.bootcss.com"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Expires" CONTENT="-1">          
+    <meta http-equiv="Pragma" CONTENT="no-cache">
+    <meta http-equiv="Cache-Control" CONTENT="no-cache">         
+    <meta name="renderer" content="webkit"/>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />    
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no,shrink-to-fit=no"/>
+    <%_ include('../../config/config') _%> 
+    <meta name="author" content="莜桔西-UGC" />
+    <%_ if(typeof description !== 'undefined') { _%>
+    <meta name="description" content="<%= description %>" />
+    <%_ } else { _%>
+    <meta name="description" content="areffect 运营平台" />
+    <%_ } _%>
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <title><%= typeof title != 'undefined' ? title : '' _%></title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <%- include('plugin/index', {plugin: ['sweetalert2', 'open-iconic'].concat(typeof plugin == 'undefined' ? [] : plugin)}) _%>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_679279_prcipcvqr6m.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <script src="/js/base.js"></script>
+  </head>
+  <body class="<%= typeof body_cls == 'undefined' ? '' : body_cls _%>">
+  <%- include('./areffect') _%>
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">

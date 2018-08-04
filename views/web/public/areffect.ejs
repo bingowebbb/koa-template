@@ -1,0 +1,183 @@
+<script type="text/javascript">
+
+    let $img = $('<div style="border: 1px solid #fff; box-shadow: 2px 2px 2px #888"><img id="ugc-app-icon" style="border-radius: 4px;" width="160" height="160" src=""></div>');
+	$img.css({"display": "none"});
+    $img.appendTo('body');
+
+	// 显示二维码
+	$(document).off('mouseenter','.card-img-app').on('mouseenter', '.card-img-app', function(e){
+		let ev = e || window.event;
+		let data = myCard.card_unit.data($(this)), sf = this;
+        $img.find('img').attr('src', data.snapcode);
+        $img.fadeIn('fast');
+	}).on('mousemove','.card-img-app', function(e){
+		let ev = e || window.event;
+        $img.css({"position": "absolute", "left": ev.pageX - 80, "top": ev.pageY + 20, "z-index": 1000});
+    }).on('mouseleave','.card-img-app', function(){
+        $img.fadeOut(50);
+        $img.find('img').attr('src', '');
+    });
+
+	
+    // 作品下架
+    $(document).off('click','.ugc-app-unpass').on('click','.ugc-app-unpass', function(){
+        let data = myCard.card_unit.data($(this)), sf = this;
+        ar_ajax("inner.ar.edit", {id: data._id, options: {online: false}}).done(res => {
+            myCard.remove_card(sf);
+            swal_success("下架成功");        
+        }).fail(err => {
+            swal_error("下架失败"); 
+        })
+    }); 
+    
+    // 作品上线
+    $(document).off('click','.ugc-app-pass').on('click','.ugc-app-pass', function(){
+        let data = myCard.card_unit.data($(this)), sf = this;
+        ar_ajax("inner.ar.edit", {id: data._id, options: {online: !data.online}}).done(res => {
+            let html = $(sf).hasClass("btn-warning") ? "上架" : "已上架";
+            $(sf).html(html);
+            $(sf).toggleClass("btn-warning btn-success");
+            swal_success();
+        }).fail(err => {
+            swal_error(); 
+        })
+    }); 
+
+    // 删除作品
+    $(document).off('click', '.ugc-app-delete').on('click', '.ugc-app-delete', function(){
+		let data = myCard.card_unit.data($(this)), sf = this;
+		ar_ajax('inner.ar.delete', {id: data._id}).done(res => {
+			myCard.remove_card(sf);
+			swal_success("删除成功");
+		}).fail(err => {
+			console.log(err);
+			swal_error("删除失败");
+		});
+	});
+
+	$(document).off('click', '.ugc-preview-areffect').on('click', '.ugc-preview-areffect', function(){
+		swal.close();
+		let data = myCard.card_unit.data($(this)), sf = this;
+		let url = data.media;
+		let editData = data;
+		swal({
+	  	  width: '40em',
+	      padding: '20',
+	      html: '<div><video id="ugc-app-video" class="ugc-app-video" style="float: left; width: 40%;" preload="auto" loop controls autoplay src="' + url + '"></video><div class="ugc-app-form" style="float: right; width: 56%;"><form name="wallpaper" class="areffect-upload" id="areffect-upload"><p><img id="ugc-app-icon" style="border-radius: 50%; margin-right: 10px" width="140" height="140" src="'+data.icon+'"><img id="ugc-app-snapcode" style="border-radius: 4px;" width="140" height="140" src="'+data.snapcode+'"></p><p><h6>作者：</h6><input type="text" name="author" id="author" value="'+ (data.author ? data.author : "") +'"/></p><p><h6>标题：</h6><input type="text" name="title" id="title"  value="'+ (data.title ? data.title : "") +'"/></p><p><h6>标签：</h6><input type="text" name="tags" id="tags" value="'+ data.tags +'"/></p><p><h6>链接：</h6><input type="text" name="deeplink" id="deeplink" value="'+ (data.deeplink ? data.deeplink : "") +'"/></p><input style="display:none" type="file" name="media" id="media" accept="video/*"/><input style="display:none" type="file" name="icon" id="icon" accept="image/*"/><input style="display:none" type="file" name="snapcode" id="snapcode" accept="image/*"/><p style="display: inline-block;"><label for="media" class="btn-sm btn-warning change-media">更换视频</label><span class="media-content"></span></p><p style="display: inline-block;"><label for="icon" class="btn-sm btn-warning change-icon">更换图标</label><span class="icon-content"></span></p><p style="display: inline-block;"><label for="snapcode" class="btn-sm btn-warning change-snapcode">更换二维码</label><span class="snapcode-content"></span></p></form><div></div>', 
+	      confirmButtonColor: '#FFD127',
+	      confirmButtonText: '确定',
+	      showCancelButton: true,
+	      cancelButtonText: '取消'  
+		}).then(function(isConfirm){
+			if(isConfirm.value === true){
+				let aa = {
+					author: '',
+					title: '',
+					deeplink: ''
+				}
+				for(var key in aa){
+					editData[key] = $('input[name="'+key+'"]').val();
+				}
+				console.log($('input[name="tags"]').val());
+				editData.tags = $('input[name="tags"]').val().split(/[,，]/);
+				console.log('editData;:::', editData);
+				ar_ajax("inner.ar.edit", {
+					id: data._id,
+					options: editData
+				}).done(res => {
+					console.log(res);
+					swal_success("修改成功");
+				}).fail(err => {
+					console.log(err);
+					swal_error("修改失败");
+				});
+			}
+		});
+		$('input[name="media"]').on('change', function(){
+			$('.change-media').html("上传中...");
+			editData.media = data.media;
+			let formData = new FormData();
+			let files = $(this).prop('files');
+		    formData.append('file', files[0]);
+			uploadFile(formData, $('#ugc-app-video'), "media", "video");
+		});
+		$('input[name="icon"]').on('change', function(){
+			$('.change-icon').html("上传中...");
+			editData.icon = data.icon;
+			let formData = new FormData();
+			let files = $(this).prop('files');
+		    formData.append('file', files[0]);
+			uploadFile(formData, $('#ugc-app-icon'), "icon", "pic");
+		});
+		$('input[name="snapcode"]').on('change', function(){
+			$('.change-snapcode').html("上传中...");
+			editData.snapcode = data.snapcode;
+			let formData = new FormData();
+			let files = $(this).prop('files');
+		    formData.append('file', files[0]);
+			uploadFile(formData, $('#ugc-app-snapcode'), "snapcode", "pic");
+		});
+
+		function uploadFile(data, $el, name, type) {
+		      axios({
+		          method: 'POST',
+		          url: '/v1/upload',
+		          data: data,
+		          params: {
+		              type: type
+		          },
+		          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		          transformRequest: [function (data) {
+		              return data;
+		          }]
+		      }).then(res => {
+				  $('.change-media').html("更换视频");
+				  $('.change-icon').html("更换图标");
+		          $el.attr("src", res.data.url);
+		          console.log(res.data.url);
+		          if (name === "media"){
+		          		editData.media = res.data.url;
+		          } else if (name === "icon") {
+		          		editData.icon = res.data.url;
+		          } else {
+		          		editData.snapcode = res.data.url;
+		          }
+		      }).catch(err => {
+		          console.log(err);
+		          swal_error("上传失败")
+		      });
+		}
+	});
+
+
+
+</script>
+
+
+<style type="text/css">
+  h5{
+      margin: 20px 0;
+  }
+
+  h6{
+      display: inline-block;
+  }
+
+  .areffect-upload input{
+      width: 80%;
+      height: 30px;
+      border-radius: 4px;
+      outline: none;
+      text-indent: 10px;
+      border: 1px solid #bbb;
+      vertical-align: middle;
+  }
+  .areffect-upload p, .confirm-upload{
+      margin-top: 10px;
+  }
+
+  label:nth-child(1){
+  		margin-right: 20px;
+  }
+
+</style>
